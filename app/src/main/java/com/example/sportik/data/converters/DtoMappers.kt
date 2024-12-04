@@ -1,6 +1,9 @@
 package com.example.sportik.data.converters
 
+import android.os.Environment
 import android.text.Html
+import android.util.Log
+import androidx.core.text.HtmlCompat
 import com.example.sportik.data.dto.NewsDto
 import com.example.sportik.data.dto.NewsWithContentDto
 import com.example.sportik.data.entity.NewsEntity
@@ -22,25 +25,30 @@ class DtoMappers {
     }
 
     fun newsWithContentDtoToNewsWithContent(dto: NewsWithContentDto): NewsWithContent {
+        var s = dto.content
+        s = s.substringAfter("<p>")
+        Log.d("CONTENT 3", dto.content)
         return NewsWithContent(
             id = dto.id,
             title = dto.title,
             postedTime = convertData(dto.posted_time),
             socialImage = dto.social_image,
             commentCount = dto.comment_count,
-            content = Html.fromHtml(dto.content).toString().re
+            content = Html.fromHtml(s, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST).toString()
             //без понятия как по другому убрать html функции из текста
         )
     }
 
     fun newsWithContentToNewsEntity(item: NewsWithContent): NewsEntity {
+        val currentDateTime: java.util.Date = java.util.Date()
         return NewsEntity(
             id = item.id,
             title = item.title,
             postedTime = item.postedTime,
             socialImage = item.socialImage,
             commentCount = item.commentCount,
-            content = item.content
+            content = item.content,
+            addedDate = currentDateTime.time
         )
     }
 
@@ -62,7 +70,8 @@ class DtoMappers {
         formatted = formatted.replace(":00Z", "")
         val splitted = formatted.split(" ").toMutableList()
         splitted[0] = splitted[0].replace('-', '.')
-        formatted = splitted[1] + " " + splitted[0]
+        val spl = splitted[0].split(".").toMutableList()
+        formatted= splitted[1] + " " + spl[2] + '.' + spl[1] + '.' +spl[0]
         return formatted
     }
 }
