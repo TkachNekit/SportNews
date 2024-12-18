@@ -34,7 +34,8 @@ class DtoMappers {
             postedTime = convertData(dto.posted_time),
             socialImage = dto.social_image,
             commentCount = dto.comment_count,
-            content = Html.fromHtml(s, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST).toString()
+            content = Html.fromHtml(s, HtmlCompat.FROM_HTML_SEPARATOR_LINE_BREAK_LIST).toString(),
+            link = dto.link
             //без понятия как по другому убрать html функции из текста
         )
     }
@@ -59,7 +60,8 @@ class DtoMappers {
             postedTime = item.postedTime,
             socialImage = item.socialImage,
             commentCount = item.commentCount,
-            content = item.content
+            content = item.content,
+            link = ""
         )
     }
 
@@ -71,7 +73,7 @@ class DtoMappers {
         val splitted = formatted.split(" ").toMutableList()
         splitted[0] = splitted[0].replace('-', '.')
         val spl = splitted[0].split(".").toMutableList()
-        formatted= splitted[1] + " " + spl[2] + '.' + spl[1] + '.' +spl[0]
+        formatted = splitted[1] + " " + spl[2] + '.' + spl[1] + '.' + spl[0]
         return formatted
     }
 }

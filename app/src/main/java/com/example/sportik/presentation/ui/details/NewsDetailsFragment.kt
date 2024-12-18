@@ -1,5 +1,6 @@
 package com.example.sportik.presentation.ui.details
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -85,6 +88,17 @@ class NewsDetailsFragment : Fragment() {
         findNavController().navigateUp()
     }
 
+    private fun onShareLinkIconClick(news: NewsWithContent) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, news.link)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+    }
+
     @Composable
     fun ItemDetails() {
         val value by viewModel.getStateLiveData().observeAsState()
@@ -133,6 +147,14 @@ class NewsDetailsFragment : Fragment() {
                             .weight(1f)
                             .fillMaxWidth()
                     )
+
+                    IconButton(onClick = { onShareLinkIconClick(news) }) {
+                        Icon(
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Share link icon"
+                        )
+                    }
+
                     val value by viewModel.getFavLiveData().observeAsState()
                     Log.d("DetailsFragment", "is fav = $value")
                     when (value) {
